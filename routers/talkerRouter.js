@@ -52,6 +52,7 @@ async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
   const talkers = await getTalkersList();
+
   const talkerIndex = talkers.findIndex((tlk) => tlk.id === Number(id));
   
   if (talkerIndex === -1) {
@@ -62,6 +63,22 @@ async (req, res) => {
   await writeTalkersList(talkers);
 
   return res.status(200).json(talkers[talkerIndex]);
+});
+
+router.delete('/:id', checkToken, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await getTalkersList();
+
+  const talkerIndex = talkers.findIndex((tlk) => tlk.id === Number(id));
+  
+  if (talkerIndex === -1) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+
+  talkers.splice(talkerIndex, 1);
+  await writeTalkersList(talkers);
+
+  return res.status(204).end();
 });
 
 module.exports = router;

@@ -42,4 +42,26 @@ async (req, res) => {
   res.status(201).json(newTalker);
 });
 
+router.put('/:id',
+checkToken,
+checkName,
+checkAge,
+checkTalkWatchedAt,
+checkTalkRate,
+async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talkers = await getTalkersList();
+  const talkerIndex = talkers.findIndex((tlk) => tlk.id === Number(id));
+  
+  if (talkerIndex === -1) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+
+  talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk };
+  await writeTalkersList(talkers);
+
+  return res.status(200).json(talkers[talkerIndex]);
+});
+
 module.exports = router;

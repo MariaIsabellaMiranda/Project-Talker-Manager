@@ -56,11 +56,13 @@ const checkTalkWatchedAt = (req, res, next) => {
 const checkTalkRate = (req, res, next) => {
   const { talk } = req.body;
 
-  if (!talk.rate) {
+  const falsyWithoutZero = (value) => (value === 0 ? false : !value);
+
+  if (falsyWithoutZero(talk.rate)) {
     return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
     }
   
-    if (!Number.isInteger(talk.rate) || talk.rate > 5 || talk.rate < 0) {
+    if (!Number.isInteger(talk.rate) || talk.rate > 5 || talk.rate < 1) {
       return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
 

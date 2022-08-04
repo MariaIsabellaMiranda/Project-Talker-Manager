@@ -6,10 +6,21 @@ const {
   checkAge,
   checkTalkWatchedAt,
   checkTalkRate,
+  checkSearchTerm,
 } = require('../middlewares/validateTalker');
+
+router.get('/search', checkToken, checkSearchTerm, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await getTalkersList();
+
+  const filteredTalkers = talkers.filter((tlk) => tlk.name.includes(q));
+
+  return res.status(200).json(filteredTalkers);
+});
 
 router.get('/', async (_req, res) => {
   const talkers = await getTalkersList();
+
   return res.status(200).json(talkers);
 });
 

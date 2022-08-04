@@ -1,3 +1,5 @@
+const { getTalkersList } = require('../services/handleFs');
+
 const checkToken = (req, res, next) => {
   const { authorization } = req.headers;
 
@@ -69,10 +71,20 @@ const checkTalkRate = (req, res, next) => {
     next();
 };
 
+const checkSearchTerm = async (req, res, next) => {
+  const { q } = req.query;
+  const talkers = await getTalkersList();
+
+  if (!q) return res.status(200).json(talkers);
+
+  next();
+};
+
 module.exports = {
   checkToken,
   checkName,
   checkAge,
   checkTalkWatchedAt,
   checkTalkRate,
+  checkSearchTerm,
 };

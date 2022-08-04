@@ -7,8 +7,16 @@ const getTalkersList = async () => {
   const data = await fs.readFile(TALKERSLIST, 'utf-8');
   return JSON.parse(data);
   } catch (err) {
-    console.error(`Ǹão foi possível ler o arquivo. ${err}`);
+    console.error(`Não foi possível ler o arquivo. ${err}`);
   }
 };
 
-module.exports = { getTalkersList };
+const writeTalkersList = async (newTalker) => {
+  try {
+  await fs.writeFile(TALKERSLIST, JSON.stringify(newTalker));
+  } catch (err) {
+    console.error(`Ǹão foi possível escrever no arquivo. ${err}`);
+  }
+};
+
+module.exports = { getTalkersList, writeTalkersList };
